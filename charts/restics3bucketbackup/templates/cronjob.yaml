@@ -62,7 +62,7 @@ spec:
                     name: {{ include "restics3bucketbackup.fullname" . }}-repository
               {{- end }}
               {{- with .Values.envFrom }}
-              {{- toYaml . | nindent 16 }}
+                {{- toYaml . | nindent 16 }}
               {{- end }}
               livenessProbe:
                 httpGet:
@@ -124,17 +124,17 @@ spec:
                           mode: 0600
             {{- end }}
             {{- with .Values.volumes }}
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- with .Values.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- with .Values.affinity }}
           affinity:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- with .Values.tolerations }}
           tolerations:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
