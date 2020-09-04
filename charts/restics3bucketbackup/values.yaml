@@ -76,7 +76,7 @@ restic:
   repositoryType: s3
   # If empty you should provide it through `envFrom` named `RESTIC_REPOSITORIY`
   repository: ""
-  # `RESTIC_PASSWORD`
+  # `RESTIC_PASSWORD` when set a secret for it will be created
   password: ""
   # If a custom hostname should be used for the `restic backup` command
   hostname: ""
@@ -105,4 +105,3 @@ restic:
     # Make sure you are using a safe mechanism to store the values.yaml file with a private key inside
     id_rsa: |
       YOUR_PRIVATE_KEY
-   

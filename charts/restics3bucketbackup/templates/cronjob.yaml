@@ -56,8 +56,12 @@ spec:
               {{- with .Values.env }}
               {{- toYaml . | nindent 12 }}
               {{- end }}
-              {{- with .Values.envFrom }}
               envFrom:
+              {{- if .Values.restic.password }}
+                - secretRef:
+                    name: {{ include "restics3bucketbackup.fullname" . }}-repository
+              {{- end }}
+              {{- with .Values.envFrom }}
               {{- toYaml . | nindent 12 }}
               {{- end }}
               livenessProbe:
