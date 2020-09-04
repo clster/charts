@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  restics3bucketbackup:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-09-04T17:39:13.481781209Z"
+    description: A Helm chart for Kubernetes
+    digest: 6564e37e45ff058f286e5ccfdfb16c826f4af16a87c9cf006d8ab337d380cf74
+    name: restics3bucketbackup
+    type: application
+    urls:
+    - https://github.com/clster/charts/releases/download/restics3bucketbackup-0.1.0/restics3bucketbackup-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-09-04T17:39:13.299722366Z"
