@@ -1,0 +1,8 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  labels:
+    {{- include "zalando-postgresql.labels" . | nindent 4 }}
+  name: {{ .Values.name | quote }}
+spec:
+  {{- toYAML .Values.spec |  }}

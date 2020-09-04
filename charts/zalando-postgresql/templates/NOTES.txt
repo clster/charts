@@ -1,0 +1,4 @@
+Your PostgreSQL instance named {{ .Values.name }} should be available in a
+few seconds.
+
+TODO Add more information about PostgreSQL.

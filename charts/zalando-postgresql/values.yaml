@@ -1,0 +1,21 @@
+# Default values for zalando-postgresql.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+name: test123-postgresql
+spec:
+  teamId: "test123"
+  volume:
+    size: 15Gi
+  numberOfInstances: 2
+  users:
+    postgres:
+    - superuser
+    - createdb
+    test123: []
+  databases:
+    test123: test123
+  postgresql:
+    version: "12"
+  enableLogicalBackup: true
+  logicalBackupSchedule: "*/30 * * * *"
