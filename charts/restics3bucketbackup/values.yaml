@@ -76,7 +76,7 @@ restic:
     /data/example123/**
   # Type: s3 or sftp
   repositoryType: s3
-  # If empty you should provide it through `envFrom` named `RESTIC_REPOSITORIY`
+  # If empty you should provide it through `envFrom` named `RESTIC_REPOSITORY`
   repository: ""
   # `RESTIC_PASSWORD` when set a secret for it will be created
   password: ""
