@@ -66,11 +66,52 @@ cronjob:
   suspend: false
 
 env: []
+# To backup a obc provisioned bucket (claim, called mybucket) of an internal Rook Ceph RGW
+# instance (without https), don#t forget to remove the brackets when uncommenting this section
+#  - name: S3_PROTOCOL
+#    value: "http"
+#  - name: S3FS_AWS_ACCESS_KEY_ID
+#    valueFrom:
+#      secretKeyRef:
+#        name: mybucket-bkt
+#        key: AWS_ACCESS_KEY_ID
+#  - name: S3FS_AWS_SECRET_ACCESS_KEY
+#    valueFrom:
+#      secretKeyRef:
+#        name: mybucket-bkt
+#        key: AWS_SECRET_ACCESS_KEY
+#  - name: S3FS_BUCKET_NAME
+#    valueFrom:
+#      configMapKeyRef:
+#        name: mybucket-bkt
+#        key: BUCKET_NAME
 envFrom: []
+# To backup a obc provisioned bucket (claim, called mybucket) of an internal Rook Ceph RGW
+# instance (without https), don#t forget to remove the brackets when uncommenting this section
+#  - configMapRef:
+#      name: mybucket-bkt
 
 volumeMounts: []
 volumes: []
 
+# Directory to backup inside the CronJob (BACKUP_TARGET)
+backupDir: /data
+
+# Bucket to backup using restic
+s3fs:
+  # Setting this to "obc" will cause the ObjectBucketClaim ConfigMap and Secret
+  # vars to be used to mount a bucket (e.g., BUCKET_HOST, BUCKET_PORT, BUCKET_NAME, etc)
+  mountMode: "obc"
+  # s3fs flags (e.g., `-o use_path_request_style`)
+  flags: ""
+  # S3FS_AWS_ACCESS_KEY_ID
+  accessKey:
+  # S3FS_AWS_SECRET_ACCESS_KEY
+  secretKey:
+  # If you are not mounting OBC created ConfigMap and Secret, specify the bucket name
+  bucketName: ""
+
+# Restic target
 restic:
   excludes: |
     /data/example123/**
@@ -84,16 +125,13 @@ restic:
   hostname: ""
   # Custom backup flags (env var: RESTIC_BACKUP_FLAGS)
   backupFlags: "--exclude-file=/restic-excludes/excludes"
-  # Directory to backup inside the CronJob (BACKUP_TARGET)
-  backupDir: /data
-
-  createSecret: false
   # S3
   s3:
     # AWS_ACCESS_KEY_ID
     accessKey:
     # AWS_SECRET_ACCESS_KEY
     secretKey:
+  # SFTP secret options
   sftp:
     # An existing Secret must contain a `config` and `id_rsa` key
     existingSecret: ""
@@ -106,4 +144,4 @@ restic:
       IdentityFile ~/.ssh/id_rsa
     # Make sure you are using a safe mechanism to store the values.yaml file with a private key inside
     id_rsa: |
-      YOUR_PRIVATE_KEY
+      YOUR_SSH_PRIVATE_KEY
