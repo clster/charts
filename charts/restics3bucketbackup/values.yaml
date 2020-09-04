@@ -84,8 +84,8 @@ restic:
   hostname: ""
   # Custom backup flags (env var: RESTIC_BACKUP_FLAGS)
   backupFlags: "--exclude-file=/restic-excludes/excludes"
-  # Target directory (BACKUP_TARGET)
-  targetDir: /data
+  # Directory to backup inside the CronJob (BACKUP_TARGET)
+  backupDir: /data
 
   createSecret: false
   # S3

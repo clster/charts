@@ -41,7 +41,7 @@ spec:
                 - name: PROMETHEUS_METRICS
                   value: "false"
                 - name: BACKUP_TARGET
-                  value: {{ .Values.restic.target | quote }}
+                  value: {{ .Values.restic.backupDir | quote }}
               {{- with .Values.restic.hostname }}
                 - name: RESTIC_HOSTNAME
                   value: {{ . | quote }}
