@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "restics3bucketbackup.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.cronjob.schedule | quote }}
+  schedule: {{ .Values.cronjob.schedule | quote }}
   concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
   successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
