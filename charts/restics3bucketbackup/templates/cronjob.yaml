@@ -54,7 +54,7 @@ spec:
                   value: {{ . | quote }}
               {{- end }}
               {{- with .Values.env }}
-              {{- toYaml . | nindent 12 }}
+              {{- toYaml . | nindent 16 }}
               {{- end }}
               envFrom:
               {{- if .Values.restic.password }}
@@ -62,7 +62,7 @@ spec:
                     name: {{ include "restics3bucketbackup.fullname" . }}-repository
               {{- end }}
               {{- with .Values.envFrom }}
-              {{- toYaml . | nindent 12 }}
+              {{- toYaml . | nindent 16 }}
               {{- end }}
               livenessProbe:
                 httpGet:
