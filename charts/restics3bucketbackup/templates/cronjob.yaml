@@ -28,13 +28,13 @@ spec:
           serviceAccountName: {{ include "restics3bucketbackup.serviceAccountName" . }}
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          restartPolicy: {{ .Values.restartPolicy | default "OnFailure" }}
           containers:
             - name: restic
               securityContext:
                 {{- toYaml .Values.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
-              restartPolicy: {{ .Values.restartPolicy }}
               command:
                 - /scripts/entrypoint.sh
               env:
