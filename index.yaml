@@ -3,6 +3,17 @@ entries:
   restics3bucketbackup:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2020-09-04T18:46:21.70908187Z"
+    description: A Helm chart to deploy a CronJob which mounts a S3 bucket using `s3fs`
+      and then runs `restic` to back it up.
+    digest: e28401196e6682ba33de46b3e4d18b6da75c38ef45de0135748c7663041ad558
+    name: restics3bucketbackup
+    type: application
+    urls:
+    - https://github.com/clster/charts/releases/download/restics3bucketbackup-0.1.9/restics3bucketbackup-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2020-09-04T18:41:07.114934234Z"
     description: A Helm chart to deploy a CronJob which mounts a S3 bucket using `s3fs`
       and then runs `restic` to back it up.
