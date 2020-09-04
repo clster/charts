@@ -1,0 +1,136 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "restics3bucketbackup.fullname" . }}
+  labels:
+    {{- include "restics3bucketbackup.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.cronjob.schedule | quote }}
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  suspend: {{ .Values.cronjob.suspend }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+        {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+          labels:
+            {{- include "restics3bucketbackup.selectorLabels" . | nindent 12 }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "restics3bucketbackup.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+            - name: restic
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command:
+                - /scripts/entrypoint.sh
+              ports:
+                - name: http
+                  containerPort: 80
+                  protocol: TCP
+              env:
+                - name: PROMETHEUS_METRICS
+                  value: "false"
+                - name: BACKUP_TARGET
+                  value: {{ .Values.restic.target | quote }}
+              {{- with .Values.restic.hostname }}
+                - name: RESTIC_HOSTNAME
+                  value: {{ . | quote }}
+              {{- end }}
+              {{- with .Values.restic.backupFlags }}
+                - name: RESTIC_BACKUP_FLAGS
+                  value: {{ . | quote }}
+              {{- end }}
+              {{- with .Values.env }}
+              {{- toYaml . | nindent 12 }}
+              {{- end }}
+              {{- with .Values.envFrom }}
+              envFrom:
+              {{- toYaml . | nindent 12 }}
+              {{- end }}
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: http
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: http
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              lifecycle:
+              preStop:
+                exec:
+                  command:
+                    - fusermount
+                    - -u
+                    - /data
+              volumeMounts:
+                - name: entrypoint
+                  mountPath: /scripts
+                  readOnly: true
+                - name: restic-excludes
+                  mountPath: /restic-excludes
+                  readOnly: true
+                {{- if eq .Values.restic.repositoryType "sftp" }}
+                - name: restic-sshkey
+                  mountPath: /root/.ssh
+                  readOnly: true
+                {{- end }}
+                {{- with .Values.volumeMounts }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+          volumes:
+            - name: entrypoint
+              projected:
+                sources:
+                  - configMap:
+                      name: {{ include "restics3bucketbackup.fullname" . }}-entrypoint
+                      items:
+                        - key: entrypoint.sh
+                          path: entrypoint.sh
+                          mode: 0755
+            - name: restic-excludes
+              configMap:
+                name: {{ include "restics3bucketbackup.fullname" . }}-excludes
+            {{- if eq .Values.restic.repositoryType "sftp" }}
+            - name: restic-sshkey
+              projected:
+                sources:
+                  - secret:
+                      name: {{ .Values.restic.sftp.existingSecret | default (printf "%s%s" (include "restics3bucketbackup.fullname" .) "-credentials") }}
+                      items:
+                        - key: config
+                          path: config
+                          mode: 0640
+                        - key: id_rsa
+                          path: id_rsa
+                          mode: 0600
+            {{- end }}
+            {{- with .Values.volumes }}
+            {{- toYaml . | nindent 8 }}
+            {{- end }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}

@@ -1,0 +1,108 @@
+# Default values for restics3bucketbackup.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: quay.io/galexrt/restic-sftp
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  privileged: true
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: false
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+cronjob:
+  schedule: "30 4 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  suspend: false
+
+env: []
+envFrom: []
+
+volumeMounts: []
+volumes: []
+
+restic:
+  excludes: |
+    /data/example123/**
+  # Type: s3 or sftp
+  repositoryType: s3
+  # If empty you should provide it through `envFrom` named `RESTIC_REPOSITORIY`
+  repository: ""
+  # `RESTIC_PASSWORD`
+  password: ""
+  # If a custom hostname should be used for the `restic backup` command
+  hostname: ""
+  # Custom backup flags (env var: RESTIC_BACKUP_FLAGS)
+  backupFlags: "--exclude-file=/restic-excludes/excludes"
+  # Target directory (BACKUP_TARGET)
+  targetDir: /data
+
+  createSecret: false
+  # S3
+  s3:
+    # AWS_ACCESS_KEY_ID
+    accessKey:
+    # AWS_SECRET_ACCESS_KEY
+    secretKey:
+  sftp:
+    # An existing Secret must contain a `config` and `id_rsa` key
+    existingSecret: ""
+    # Specify a custom ssh config to mount, this is not the best example due to the ignored host key
+    config: |
+      Host *
+      Port 22
+      StrictHostKeyChecking no
+      UserKnownHostsFile /dev/null
+      IdentityFile ~/.ssh/id_rsa
+    # Make sure you are using a safe mechanism to store the values.yaml file with a private key inside
+    id_rsa: |
+      YOUR_PRIVATE_KEY
+   

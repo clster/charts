@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "restics3bucketbackup.fullname" . }}-entrypoint
+  labels:
+    {{- include "restics3bucketbackup.labels" . | nindent 4 }}
+data:
+  entrypoint.sh: |
+    #!/bin/sh
+
+    set -e
+
+    mkdir -p "$BACKUP_TARGET"
+    echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > /tmp/.passwd-s3fs
+    chmod 600 /tmp/.passwd-s3fs
+
+    s3fs "$BUCKET_NAME" "$BACKUP_TARGET" -o passwd_file=/tmp/.passwd-s3fs -o url="http://$BUCKET_HOST.svc.cluster.local:$BUCKET_PORT/" -o use_path_request_style
+
+    /usr/local/bin/entrypoint.sh
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "restics3bucketbackup.fullname" . }}-excludes
+  labels:
+    {{- include "restics3bucketbackup.labels" . | nindent 4 }}
+data:
+  excludes: |
+    {{- .Values.restic.excludes | nindent 4 }}
