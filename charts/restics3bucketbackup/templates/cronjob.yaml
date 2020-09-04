@@ -75,12 +75,12 @@ spec:
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
               lifecycle:
-              preStop:
-                exec:
-                  command:
-                    - fusermount
-                    - -u
-                    - /data
+                preStop:
+                  exec:
+                    command:
+                      - fusermount
+                      - -u
+                      - /data
               volumeMounts:
                 - name: entrypoint
                   mountPath: /scripts
