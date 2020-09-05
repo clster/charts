@@ -5,4 +5,4 @@ metadata:
     {{- include "zalando-postgresql.labels" . | nindent 4 }}
   name: {{- include "zalando-postgresql.name" . }}
 spec:
-  {{- toYAML .Values.spec | nindent 4 }}
+  {{- toYaml .Values.spec | nindent 4 }}
