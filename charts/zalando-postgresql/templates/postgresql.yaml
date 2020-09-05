@@ -3,6 +3,6 @@ kind: postgresql
 metadata:
   labels:
     {{- include "zalando-postgresql.labels" . | nindent 4 }}
-  name: {{- include "zalando-postgresql.name" . }}
+  name: {{ include "zalando-postgresql.name" . }}
 spec:
-  {{- toYaml .Values.spec | nindent 4 }}
+  {{- toYaml .Values.spec | nindent 2 }}
