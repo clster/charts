@@ -124,6 +124,16 @@ entries:
   zalando-postgresql:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-09-05T17:39:52.021785088Z"
+    description: A simple Helm chart wrapper around Zalando's PostgreSQL objects.
+    digest: b0152b653766223ae26373059c3a567f98a651245bb7a7ff63a557d5ab7bcc8c
+    name: zalando-postgresql
+    type: application
+    urls:
+    - https://github.com/clster/charts/releases/download/zalando-postgresql-0.1.2/zalando-postgresql-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-09-05T16:18:15.630101723Z"
     description: A simple Helm chart wrapper around Zalando's PostgreSQL objects.
     digest: 596d4c5c3ff180000b9ff098c50cc46f58369438a2314303ff7ef87382d4ce2c
