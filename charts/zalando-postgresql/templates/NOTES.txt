@@ -1,4 +1,3 @@
-Your PostgreSQL instance named {{ .Values.name }} should be available in a
-few seconds.
-
-TODO Add more information about PostgreSQL.
+Your PostgreSQL instance named {{ include "zalando-postgresql.name" . }} should be available in a
+few seconds at the service:
+{{ include "zalando-postgresql.name" . }}:5432
