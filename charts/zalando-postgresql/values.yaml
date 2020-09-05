@@ -2,7 +2,15 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# This is the name used for the PostgreSQL object name, if not set
+# the Helm release name is used.
+#
+# Any name is truncated at 63 characters and leading `-` are trimmed.
 name: test123-postgresql
+# The PostgreSQL object spec from Zalando's postgres-operator
+# See https://github.com/zalando/postgres-operator/blob/03437b63749e9b3bd51cdc9fd6b2f38bd6bfa8d6/docs/reference/cluster_manifest.md
+# and
+# https://github.com/zalando/postgres-operator/blob/03437b63749e9b3bd51cdc9fd6b2f38bd6bfa8d6/manifests/complete-postgres-manifest.yaml
 spec:
   teamId: "test123"
   volume:
