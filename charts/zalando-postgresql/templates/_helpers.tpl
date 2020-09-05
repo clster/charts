@@ -23,3 +23,11 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "zalando-postgresql.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "zalando-postgresql.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
