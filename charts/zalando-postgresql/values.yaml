@@ -11,19 +11,19 @@ name: test123-postgresql
 # See https://github.com/zalando/postgres-operator/blob/03437b63749e9b3bd51cdc9fd6b2f38bd6bfa8d6/docs/reference/cluster_manifest.md
 # and
 # https://github.com/zalando/postgres-operator/blob/03437b63749e9b3bd51cdc9fd6b2f38bd6bfa8d6/manifests/complete-postgres-manifest.yaml
-spec:
-  teamId: "test123"
-  volume:
-    size: 15Gi
-  numberOfInstances: 2
-  users:
-    postgres:
-    - superuser
-    - createdb
-    test123: []
-  databases:
-    test123: test123
-  postgresql:
-    version: "12"
-  enableLogicalBackup: true
-  logicalBackupSchedule: "*/30 * * * *"
+spec: {}
+#  teamId: "test123"
+#  volume:
+#    size: 15Gi
+#  numberOfInstances: 2
+#  users:
+#    postgres:
+#    - superuser
+#    - createdb
+#    test123: []
+#  databases:
+#    test123: test123
+#  postgresql:
+#    version: "12"
+#  enableLogicalBackup: true
+#  logicalBackupSchedule: "*/30 * * * *"
