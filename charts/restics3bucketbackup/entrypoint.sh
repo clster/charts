@@ -8,6 +8,7 @@ IONICE_CLASS="${IONICE_CLASS:-2}"
 IONICE_CLASSDATA="${IONICE_CLASSDATA:-7}"
 NICE_ADJUSTMENT="${NICE_ADJUSTMENT:-19}"
 # S3FS variables
+S3FS_ENABLED="${S3FS_ENABLED:-true}"
 S3FS_FLAGS="${S3FS_FLAGS:-}"
 S3FS_AWS_ACCESS_KEY_ID="${S3FS_AWS_ACCESS_KEY_ID:-}"
 S3FS_AWS_SECRET_ACCESS_KEY="${S3FS_AWS_SECRET_ACCESS_KEY:-}"
@@ -28,14 +29,18 @@ if [ -n "$S3FS_AWS_ACCESS_KEY_ID" ] && [ -n "$S3FS_AWS_SECRET_ACCESS_KEY" ]; the
     chmod 600 /tmp/.passwd-s3fs
 fi
 
-echo "Mounting bucket using s3fs ..."
-mkdir -p "$BACKUP_TARGET"
-if [ "$S3FS_MOUNTMODE" = "obc" ]; then
-    s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" -o passwd_file=/tmp/.passwd-s3fs -o url="$S3_PROTOCOL://$BUCKET_HOST:$BUCKET_PORT$URL_PATH" $S3FS_FLAGS
+if [ "$S3FS_ENABLED" = "true" ]; then
+    echo "Mounting bucket using s3fs ..."
+    mkdir -p "$BACKUP_TARGET"
+    if [ "$S3FS_MOUNTMODE" = "obc" ]; then
+        s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" -o passwd_file=/tmp/.passwd-s3fs -o url="$S3_PROTOCOL://$BUCKET_HOST:$BUCKET_PORT$URL_PATH" $S3FS_FLAGS
+    else
+        s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" $S3FS_FLAGS
+    fi
+    echo "Mounted bucket using s3fs."
 else
-    s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" $S3FS_FLAGS
+    echo "S3FS mount not enabled."
 fi
-echo "Mounted bucket using s3fs."
 
 echo "Running restic backup ..."
 ionice -c "$IONICE_CLASS" -n "$IONICE_CLASSDATA" nice -n "$NICE_ADJUSTMENT" restic backup $RESTIC_BACKUP_FLAGS --host "$RESTIC_HOSTNAME" "$BACKUP_TARGET"
