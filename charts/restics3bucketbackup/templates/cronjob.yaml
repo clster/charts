@@ -41,7 +41,7 @@ spec:
                 - name: BACKUP_TARGET
                   value: {{ .Values.backupDir | quote }}
                 - name: S3FS_ENABLED
-                  value: {{ .Values.s3fs.enabled | default "true" | lower | quote }}
+                  value: {{ default "true" .Values.s3fs.enabled | lower | quote }}
               {{- with .Values.s3fs.mountMode }}
                 - name: S3FS_MOUNTMODE
                   value: {{ . }}
