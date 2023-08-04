@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 # TODO add simple function to get env or from file var
@@ -33,8 +33,13 @@ if [ "$S3FS_ENABLED" = "true" ]; then
     echo "Mounting bucket using s3fs ..."
     mkdir -p "$BACKUP_TARGET"
     if [ "$S3FS_MOUNTMODE" = "obc" ]; then
-        s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" -o passwd_file=/tmp/.passwd-s3fs -o url="$S3_PROTOCOL://$BUCKET_HOST:$BUCKET_PORT$URL_PATH" $S3FS_FLAGS
+        # shellcheck disable=SC2086
+        s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" \
+            -o passwd_file=/tmp/.passwd-s3fs \
+            -o url="$S3_PROTOCOL://$BUCKET_HOST:$BUCKET_PORT$URL_PATH" \
+            $S3FS_FLAGS
     else
+        # shellcheck disable=SC2086
         s3fs "$S3FS_BUCKET_NAME" "$BACKUP_TARGET" $S3FS_FLAGS
     fi
     echo "Mounted bucket using s3fs."
@@ -43,7 +48,14 @@ else
 fi
 
 echo "Running restic backup ..."
-ionice -c "$IONICE_CLASS" -n "$IONICE_CLASSDATA" nice -n "$NICE_ADJUSTMENT" restic backup $RESTIC_BACKUP_FLAGS --host "$RESTIC_HOSTNAME" "$BACKUP_TARGET"
+# shellcheck disable=SC2086
+ionice -c "$IONICE_CLASS" -n "$IONICE_CLASSDATA" \
+    nice -n "$NICE_ADJUSTMENT" \
+        restic \
+            backup \
+            $RESTIC_BACKUP_FLAGS \
+            --host "$RESTIC_HOSTNAME" \
+            "$BACKUP_TARGET"
 
 sleep 1
 fusermount -u "$BACKUP_TARGET"
