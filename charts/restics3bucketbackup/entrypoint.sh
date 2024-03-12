@@ -58,4 +58,7 @@ ionice -c "$IONICE_CLASS" -n "$IONICE_CLASSDATA" \
             "$BACKUP_TARGET"
 
 sleep 1
-fusermount -u "$BACKUP_TARGET"
+if [ "$S3FS_ENABLED" = "true" ]; then
+    echo "Unmounting bucket using fuse ..."
+    fusermount -u "$BACKUP_TARGET"
+fi
